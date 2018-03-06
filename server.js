@@ -42,8 +42,9 @@ router.route('/delete')
 
 router.get('/get/:username',function(req,res){
     var user=req.params.username;
+
     if(!user) {
-        res.send('  un valid ');
+        res.send(' input is not valid ');
     }
 
     else res.send('get request :' + user);
@@ -51,30 +52,30 @@ router.get('/get/:username',function(req,res){
 });
 
 router.put('/put',function(req,res){
-    var username=req.body.username;
-    var password=req.body.password;
-    if(!username||!password){
-        res.status(202).send('un valid');
+
+    console.log(req.body);
+     if (req.get('Content-Type')){
+        console.log("Content-Type: "+req.get('Content-Type'));
+        res=res.type(req.get('Content-Type'));
     }
-    else {
-        testob.username=username;
-        testob.password=password;
-        res.json("put request updates:"+username+' + '+password);
-    }
+    res.send(req.body);
 });
+
 var createError = require('http-errors')
 router.post('/post', function(req, res) {
-    if (!req.body.username || !req.body.password) {
-        res.json({success: false, msg: 'Please pass username and password.'});
-    } else {
+    if (req.body.username && req.body.password) {
+
         var newUser = {
             username: req.body.username,
             password: req.body.password
         };
-
-
         res.json('new user :'+' username: '+newUser.username+' password: '+newUser.password);
     }
+    else     if (req.get('Content-Type')){
+        console.log("Content-Type: "+req.get('Content-Type'));
+        res=res.type(req.get('Content-Type'));
+        res.send(req.body);
+        }
 });
 
 router.patch('/patch',function(req,res,next){
